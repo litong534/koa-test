@@ -7,18 +7,16 @@ const resHeader = require('./middleware/responseHeader');
 app.use(kJson());
 app.use(resHeader);
 app.use(async (ctx, next) => {
-  console.log(1);
+  console.log(`${ctx.request.method}======${ctx.url}`);
   await next();
-  console.log(2);
 });
 app.use(async (ctx, next) => {
-  console.log(3);
   await next();
-  console.log(4);
 
 });
 // add url-route:
 router.get('/', async (ctx, next) => {
+  ctx.type = 'text/html';
   ctx.response.body = `<h1>Index</h1>
         <form action="/signin" method="post">
             <p>Name: <input name="name" value="koa"></p>
@@ -28,6 +26,7 @@ router.get('/', async (ctx, next) => {
 });
 
 router.post('/signin', async (ctx, next) => {
+  ctx.type = 'text/html';
   var name = ctx.request.body.name || '',
     password = ctx.request.body.password || '';
   console.log(`signin with name: ${name}, password: ${password}`);
